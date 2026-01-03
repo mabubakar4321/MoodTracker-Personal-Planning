@@ -28,6 +28,18 @@
             android:text="Track your daily routine &amp; mood"
             android:textSize="14sp"
             android:textColor="#64748B"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ✅ LOGOUT BUTTON -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Logout"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:backgroundTint="#EF4444"
+            android:textColor="#FFFFFF"
             android:layout_marginBottom="24dp" />
 
         <!-- Add Routine Button -->

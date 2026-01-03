@@ -7,8 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bakar.moodtracker.adapter.RoutineAdapter
 import com.bakar.moodtracker.data.AppDatabase
-import com.bakar.moodtracker.data.RoutineEntity
 import com.bakar.moodtracker.databinding.ActivityMainBinding
+import com.bakar.moodtracker.util.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -17,18 +17,33 @@ class MainActivity : ComponentActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: RoutineAdapter
     private lateinit var db: AppDatabase
+    private lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ✅ SESSION CHECK (BLOCK UNAUTHORIZED ACCESS)
+        session = SessionManager(this)
+        if (!session.isLoggedIn()) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         db = AppDatabase.getDatabase(this)
 
+        // ✅ LOGOUT BUTTON CLICK (THIS WAS MISSING)
+        binding.btnLogout.setOnClickListener {
+            session.logout()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
         adapter = RoutineAdapter(
             onClick = { routine ->
-                // ✅ Open same add screen but in edit mode
                 val i = Intent(this, AddRoutineActivity::class.java)
                 i.putExtra("routineId", routine.id)
                 startActivity(i)
